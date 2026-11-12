@@ -17,6 +17,7 @@ ALTER TABLE notification_logs
     ALTER COLUMN status TYPE VARCHAR(50),
     ALTER COLUMN status SET DEFAULT 'pending',
     ALTER COLUMN channel TYPE VARCHAR(50),
+    ALTER COLUMN channel SET DEFAULT 'push',
     ALTER COLUMN sent_at DROP DEFAULT,
     ADD COLUMN IF NOT EXISTS device_id UUID,
     ADD COLUMN IF NOT EXISTS provider VARCHAR(30) DEFAULT 'firebase',
@@ -24,6 +25,12 @@ ALTER TABLE notification_logs
     ADD COLUMN IF NOT EXISTS error_message TEXT,
     ADD COLUMN IF NOT EXISTS retry_count INT NOT NULL DEFAULT 0,
     ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
+UPDATE notification_logs SET status = 'pending' WHERE status IS NULL;
+UPDATE notification_logs SET channel = 'push' WHERE channel IS NULL;
+ALTER TABLE notification_logs
+    ALTER COLUMN status SET NOT NULL,
+    ALTER COLUMN channel SET NOT NULL;
 
 DO $$
 BEGIN
