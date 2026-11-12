@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+bin/
+dist/
+internal/config/firebase-service-account.json
